@@ -7,75 +7,59 @@
       </div>
       <div class="login-box">
         <h2>账号登录</h2>
-        <el-form 
-          :model="loginForm" 
-          :rules="rules" 
-          ref="loginFormRef"
-          size="large"
-        >
-          <el-form-item prop="username">
-            <el-input 
-              v-model="loginForm.username"
+        <form @submit.prevent="handleLogin">
+          <div class="form-item">
+            <input 
+              v-model="formData.username" 
+              type="text" 
               placeholder="请输入用户名"
-              :prefix-icon="UserIcon"
-            />
-          </el-form-item>
-          <el-form-item prop="password">
-            <el-input 
-              v-model="loginForm.password"
-              type="password"
-              placeholder="请输入密码"
-              :prefix-icon="LockIcon"
-              show-password
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button 
-              type="primary" 
-              @click="handleLogin" 
-              style="width: 100%"
-              :loading="loading"
+              required
             >
-              登录
-            </el-button>
-          </el-form-item>
-        </el-form>
+          </div>
+          
+          <div class="form-item">
+            <input 
+              v-model="formData.password" 
+              type="password" 
+              placeholder="请输入密码"
+              required
+            >
+          </div>
+          
+          <button type="submit">登录</button>
+          <p class="register-link">
+            没有账号？<router-link to="/register">去注册</router-link>
+          </p>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script setup name="UserLoginPage">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { User as UserIcon, Lock as LockIcon } from '@element-plus/icons-vue'
+import { userApi } from '@/api/user'
 
 const router = useRouter()
-const loginFormRef = ref(null)
-const loading = ref(false)
 
-const loginForm = reactive({
+const formData = ref({
   username: '',
   password: ''
 })
 
-const rules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
-}
-
 const handleLogin = async () => {
-  if (!loginFormRef.value) return
-  loading.value = true
   try {
-    await loginFormRef.value.validate((valid) => {
-      if (valid) {
-        // 这里添加登录逻辑
-        router.push('/')
-      }
-    })
-  } finally {
-    loading.value = false
+    const res = await userApi.login(formData.value)
+    if (res.code === '000000') {
+      // 保存token
+      localStorage.setItem('token', res.data.token)
+      // 保存用户信息
+      localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+      router.push('/')
+    }
+  } catch (error) {
+    console.error('登录失败:', error)
   }
 }
 </script>
@@ -136,20 +120,56 @@ const handleLogin = async () => {
   font-size: 28px;
 }
 
-:deep(.el-input__wrapper) {
-  box-shadow: 0 0 0 1px #dcdfe6 inset;
+.form-item {
+  margin-bottom: 20px;
 }
 
-:deep(.el-input__wrapper:hover) {
-  box-shadow: 0 0 0 1px #c0c4cc inset;
+.form-item input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.3s;
 }
 
-:deep(.el-input__wrapper.is-focus) {
-  box-shadow: 0 0 0 1px #409eff inset;
+.form-item input:focus {
+  border-color: #409eff;
+  outline: none;
 }
 
-:deep(.el-button) {
-  height: 44px;
+.form-item input::placeholder {
+  color: #909399;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #409eff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #66b1ff;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #606266;
+}
+
+.register-link a {
+  color: #409eff;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  color: #66b1ff;
 }
 </style>

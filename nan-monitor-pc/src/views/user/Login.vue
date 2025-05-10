@@ -39,6 +39,7 @@
 <script setup name="UserLoginPage">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { userApi } from '@/api/user'
 
 const router = useRouter()
@@ -51,15 +52,14 @@ const formData = ref({
 const handleLogin = async () => {
   try {
     const res = await userApi.login(formData.value)
-    if (res.code === '000000') {
-      // 保存token
-      localStorage.setItem('token', res.data.token)
-      // 保存用户信息
-      localStorage.setItem('userInfo', JSON.stringify(res.data.user))
-      router.push('/')
-    }
+    // 登录成功
+    localStorage.setItem('token', res.data.token)
+    localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+    ElMessage.success('登录成功')
+    router.push('/')
   } catch (error) {
     console.error('登录失败:', error)
+    // 错误提示已经在请求拦截器中处理，这里不需要重复提示
   }
 }
 </script>

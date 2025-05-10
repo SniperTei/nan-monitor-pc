@@ -1,47 +1,57 @@
-import axios from 'axios'
-
-const baseURL = 'http://localhost:3000/api'
-
-const api = axios.create({
-  baseURL,
-  timeout: 5000
-})
+import request from '@/utils/request'
 
 export const userApi = {
-  // 用户注册
-  register(data) {
-    return api.post('/user/register', data)
+  /**
+   * 用户注册
+   * @param {Object} data - 注册数据
+   * @param {boolean} showError - 是否显示错误提示
+   */
+  register(data, showError = true) {
+    return request({
+      url: '/user/register',
+      method: 'post',
+      data,
+      showError
+    })
   },
 
-  // 用户登录
-  login(data) {
-    return api.post('/user/login', data)
+  /**
+   * 用户登录
+   * @param {Object} data - 登录数据
+   * @param {boolean} showError - 是否显示错误提示
+   */
+  login(data, showError = true) {
+    return request({
+      url: '/user/login',
+      method: 'post',
+      data,
+      showError
+    })
   },
 
-  // 获取用户信息
-  getProfile() {
-    return api.get('/user/profile')
-  }
-}
+  /**
+   * 获取用户信息
+   * @param {boolean} showError - 是否显示错误提示
+   */
+  getProfile(showError = true) {
+    return request({
+      url: '/user/profile',
+      method: 'get',
+      showError
+    })
+  },
 
-// 请求拦截器 - 添加token
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  /**
+   * 更新用户信息
+   * @param {Object} data - 用户信息
+   * @param {boolean} showError - 是否显示错误提示
+   */
+  updateProfile(data, showError = true) {
+    return request({
+      url: '/user/profile',
+      method: 'put',
+      data,
+      showError
+    })
   }
-  return config
-})
-
-// 响应拦截器 - 统一错误处理
-api.interceptors.response.use(
-  response => response.data,
-  error => {
-    const { response } = error
-    if (response?.data?.msg) {
-      // 这里可以集成您的消息提示组件
-      console.error(response.data.msg)
-    }
-    return Promise.reject(error)
-  }
-) 
+} 

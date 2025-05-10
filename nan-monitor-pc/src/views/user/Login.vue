@@ -41,8 +41,10 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { userApi } from '@/api/user'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 const formData = ref({
   username: '',
@@ -52,9 +54,9 @@ const formData = ref({
 const handleLogin = async () => {
   try {
     const res = await userApi.login(formData.value)
-    // 登录成功
-    localStorage.setItem('token', res.data.token)
-    localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+    // 登录成功，存储用户信息到 store
+    userStore.setToken(res.data.token)
+    userStore.setUserInfo(res.data.user)
     ElMessage.success('登录成功')
     router.push('/')
   } catch (error) {

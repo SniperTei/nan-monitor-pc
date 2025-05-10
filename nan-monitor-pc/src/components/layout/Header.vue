@@ -3,7 +3,7 @@
     <div class="header-right">
       <el-dropdown>
         <span class="user-info">
-          管理员 <el-icon><CaretBottom /></el-icon>
+          {{ userStore.displayName }} <el-icon><CaretBottom /></el-icon>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
@@ -15,13 +15,18 @@
   </div>
 </template>
 
-<script setup name="Header">
+<script setup name="AppHeader">
 import { useRouter } from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
+import { useUserStore } from '@/stores/user'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 const handleLogout = () => {
+  userStore.clearUser()
+  ElMessage.success('已退出登录')
   router.push('/login')
 }
 </script>
@@ -42,5 +47,6 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   color: #606266;
+  gap: 4px;
 }
 </style> 

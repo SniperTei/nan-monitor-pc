@@ -39,6 +39,15 @@ const routes = [
         name: 'TrackingView',
         component: () => import('@/views/track/Tracking.vue'),
         meta: { title: '埋点查看' }
+      },
+      {
+        path: 'test/upload',
+        name: 'TestUpload',
+        component: () => import('@/views/test/TestUpload.vue'),
+        meta: { 
+          title: '文件上传测试',
+          requiresAuth: true  // 需要登录才能访问
+        }
       }
     ]
   }

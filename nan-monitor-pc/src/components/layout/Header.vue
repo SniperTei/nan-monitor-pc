@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script setup name="AppHeader">
+<script setup name="AppHeaderBar">
 import { useRouter } from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'

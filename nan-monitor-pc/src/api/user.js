@@ -8,7 +8,7 @@ export const userApi = {
    */
   register(data, showError = true) {
     return request({
-      url: '/user/register',
+      url: 'v1/user/register',
       method: 'post',
       data,
       showError
@@ -22,7 +22,7 @@ export const userApi = {
    */
   login(data, showError = true) {
     return request({
-      url: '/user/login',
+      url: 'v1/user/login',
       method: 'post',
       data,
       showError
@@ -35,7 +35,7 @@ export const userApi = {
    */
   getProfile(showError = true) {
     return request({
-      url: '/user/profile',
+      url: 'v1/user/profile',
       method: 'get',
       showError
     })

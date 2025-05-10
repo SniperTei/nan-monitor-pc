@@ -23,6 +23,10 @@
       <el-icon><DataLine /></el-icon>
       <span>埋点查看</span>
     </el-menu-item>
+    <el-menu-item index="/test/upload">
+      <el-icon><Upload /></el-icon>
+      <span>文件上传测试</span>
+    </el-menu-item>
   </el-menu>
 </template>
 

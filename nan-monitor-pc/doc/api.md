@@ -43,7 +43,7 @@ Authorization: Bearer <token>
 ### 1. 用户注册
 
 **请求方式**
-- POST `/user/register`
+- POST `v1/user/register`
 
 **请求参数**
 ```json
@@ -72,7 +72,7 @@ Authorization: Bearer <token>
 ### 2. 用户登录
 
 **请求方式**
-- POST `/user/login`
+- POST `v1/user/login`
 
 **请求参数**
 ```json
@@ -107,7 +107,7 @@ Authorization: Bearer <token>
 ### 3. 获取用户信息
 
 **请求方式**
-- GET `/user/profile`
+- GET `v1/user/profile`
 
 **请求头**
 ```
@@ -145,7 +145,7 @@ Authorization: Bearer <token>
 ### 4. 更新用户信息
 
 **请求方式**
-- PUT `/user/profile`
+- PUT `v1/user/profile`
 
 **请求头**
 ```
@@ -181,6 +181,93 @@ Authorization: Bearer <token>
   "timestamp": "2023-12-20 14:11:30.123"
 }
 ```
+
+### 5. 文件上传
+
+**请求方式**
+- POST `v1/upload/files`
+
+**请求头**
+```
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+```
+
+**请求参数**
+- fileList: 文件数组（1-9个文件）
+
+**成功响应示例（单文件）**
+```json
+{
+  "code": "000000",
+  "statusCode": 200,
+  "msg": "文件上传成功",
+  "data": [
+    {
+      "url": "http://localhost:3000/uploads/image/uuid.jpg",
+      "fileName": "uuid.jpg",
+      "originalName": "photo.jpg",
+      "size": 1024,
+      "mimeType": "image/jpeg",
+      "type": "image"
+    }
+  ],
+  "timestamp": "2023-12-20 14:11:30.123"
+}
+```
+
+**成功响应示例（多文件）**
+```json
+{
+  "code": "000000",
+  "statusCode": 200,
+  "msg": "文件上传成功",
+  "data": [
+    {
+      "url": "http://localhost:3000/uploads/image/uuid1.jpg",
+      "fileName": "uuid1.jpg",
+      "originalName": "photo1.jpg",
+      "size": 1024,
+      "mimeType": "image/jpeg",
+      "type": "image"
+    },
+    {
+      "url": "http://localhost:3000/uploads/document/uuid2.pdf",
+      "fileName": "uuid2.pdf",
+      "originalName": "document.pdf",
+      "size": 2048,
+      "mimeType": "application/pdf",
+      "type": "document"
+    }
+  ],
+  "timestamp": "2023-12-20 14:11:30.123"
+}
+```
+
+**错误响应示例**
+```json
+{
+  "code": "A00001",
+  "statusCode": 400,
+  "msg": "最多只能上传9个文件",
+  "data": null,
+  "timestamp": "2023-12-20 14:11:30.123"
+}
+```
+
+**使用说明**
+1. 支持的文件类型：
+   - 图片：.png, .jpg, .jpeg, .gif, .webp
+   - 音频：.mp3, .wav, .ogg
+   - 视频：.mp4, .webm, .avi
+   - 文档：.pdf, .doc, .docx
+2. 单个文件大小限制：
+   - 开发环境：5MB
+   - 生产环境：10MB
+3. 文件数量限制：1-9个
+4. 返回的文件URL会根据环境自动适配：
+   - 开发环境：http://localhost:3000/uploads/...
+   - 生产环境：https://api.yourdomain.com/uploads/...
 
 ## 错误响应示例
 
